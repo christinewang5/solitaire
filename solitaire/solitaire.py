@@ -5,37 +5,59 @@ class Solitaire():
 	def __init__(self):
 		self.deck = Deck()
 		self.tableau = Tableau(self.deck)
-		# self.foundation = Foundation()
-		# self.Stock_waste = StockWaste(deck)
+		self.foundation = Foundation()
+		self.stock_waste = StockWaste(self.deck)
 
 	def __str__(self):
 		"""
 		Generates string for current status of table
 		"""
 		header = "Stock \t # in Waste \t\t\t\t Foundation C H S D\n" 
-		# first_row = "{}  \t {} \t\t\t\t          {} {} {} {}\n".format(
-		# 	self.stock_waste.get_waste(), self.stock_waste.get_num_stock(), 
-		# 	self.foundation.get_top_card("club"), self.foundation.get_top_card("heart"), 
-		# 	self.foundation.get_top_card("spade"), self.foundation.get_top_card("diamond"))
-		# return header + first_row + str(self.tableau)
-		return header + str(self.tableau)
-
+		first_row = "{}  \t {} \t\t\t\t          {} {} {} {}\n".format(
+			self.stock_waste.get_waste(), self.stock_waste.get_num_stock(), 
+			self.foundation.get_top_card("club"), self.foundation.get_top_card("heart"), 
+			self.foundation.get_top_card("spade"), self.foundation.get_top_card("diamond"))
+		return header + first_row + str(self.tableau)
+	
 	def get_instructions(self):
 		""" 
 		Provides list of commands
 		"""	
 		instructions_str = 'Commands: \n' \
-		+ 'hw - move card from Stock to waste\n'\
+		+ 'sw - move card from stock to waste\n'\
 		+ 'wf - move card from waste to foundation\n'\
 		+ 'wt - move card from waste to tableau\n'\
 		+ 'tf <num tableau> - move card from tableau to foundation\n'\
 		+ 'tt <num tableau 1> <num tableau 2> - move card from one tableau to another\n'\
 		+ 'q - quit\n'
 		return instructions_str
+	
+	def stock_to_waste(self):
+		return self.stock_waste.stock_to_waste()
+	
+	def waste_to_foundation(self):
+		card = self.stock_waste.waste[-1]
+		if self.foundation.add_card(card): 
+			card = self.stock_waste.pop_waste_card()
+			return True
+		return False
 
+	def waste_to_tableau(self, column):
+		""" Returns True if a card from the Waste pile is succesfully moved to a column
+			on the Tableau, returns False otherwise. """
+		card = self.stock_waste.get_waste[-1]
+		if self.tableau.add_cards_to_col([card], column):
+			self.stock_waste.pop_waste_card()
+			return True
+		else:
+			return False
+
+	def tableau_to_tableau(self, col1, col2):
+		return self.tableau.tableau_to_tableau(col1, col2)
+	
 class Tableau:
 	def __init__(self, deck): 
-		card_list = deck.get_deck()
+		card_list = deck.deck
 		self.unflipped = {x: card_list[:x + 1] for x in range(7)}
 		self.flipped = {x: [self.unflipped[x].pop()] for x in range(7)}
 
@@ -77,7 +99,7 @@ class Tableau:
 			return False
 
 	def tableau_to_tableau(self, c1, c2):
-		""" 
+		"""
 		Returns True if any card(s) are successfully moved from c1 to c2 on
 		the Tableau
 		Returns False otherwise. 
@@ -99,3 +121,68 @@ class Tableau:
 			return True
 		else:
 			return False
+
+class Foundation:
+	def __init__(self):
+		self.suits = {"club":[], "heart":[], 
+					  "spade":[], "diamond":[]}
+	def get_top_card(self, suit):
+		stack = self.suits[suit]
+		if len(stack) == 0:
+			return suit[0].upper()
+		else:
+			return self.suits[suit][-1]
+	def check_win(self):
+		""" Returns whetsher the user has won the game. """
+		for suit, stack in self.suits.items():
+			if len(stack) != 13: 
+				return False
+		return True
+
+	def add_card(self, card):
+		""" Returns True if a card is successfully added to the Foundation,
+			otherwise, returns False. """
+		stack = self.foundation_stacks[card.suit]
+		if (len(stack) == 0 and card.value == 1) or stack[-1].is_smaller(card):
+			stack.append(card)
+			return True
+		else:
+			return False
+
+class StockWaste:
+	def __init__(self, deck):
+		self.stock = deck.deck
+		self.waste = []
+
+	def stock_to_waste(self):
+		""" Returns True if a card is sucessfully moved from the Stock pile to the
+			Waste pile, returns False otherwise. """
+		if len(self.stock) + len(self.waste) == 0:
+			return False
+
+		if len(self.stock) == 0:
+			self.waste.reverse()
+			self.stock = self.waste.copy()
+			self.waste.clear()
+
+		self.waste.append(self.stock.pop())
+		return True
+
+	def pop_waste_card(self):
+		""" Removes a card from the Waste pile. """
+		if len(self.waste) > 0:
+			return self.waste.pop()
+
+	def get_waste(self):
+		""" Retrieves the top card of the Waste pile. """
+		if len(self.waste) > 0:
+			return self.waste[-1]
+		else:
+			return "empty"
+
+	def get_num_stock(self):
+		""" Returns a string of the number of cards in the stock. """
+		if len(self.stock) > 0:
+			return str(len(self.stock)) + " card(s)"
+		else:
+			return "empty"

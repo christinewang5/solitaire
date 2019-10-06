@@ -47,7 +47,3 @@ class Deck:
 
 	def deal_cards(self, num_cards):
 		return list(self.deck[:num_cards])
-
-
-
-    
