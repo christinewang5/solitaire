@@ -8,7 +8,6 @@ class Solitaire():
 		self.tableau = Tableau(deck.deal_cards(28))
 		self.foundation = Foundation()
 		self.stock_waste = StockWaste(deck.deal_cards(24))
-		self.win = False
 
 	def __str__(self):
 		"""

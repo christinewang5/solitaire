@@ -1,9 +1,6 @@
 import random
 import curses
 
-suits = ['spade', 'diamond', 'heart', 'club']
-ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-
 class Card:
 	def __init__(self, rank, suit):
 		self.rank = rank
@@ -11,6 +8,7 @@ class Card:
 	
 	def __str__(self): 
 		return self.rank + self.suit[0].upper()
+
 	def display(self, screen):
 		curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
 		curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
@@ -41,6 +39,8 @@ class Card:
 class Deck:
 	def __init__(self):
 		deck = []
+		ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+		suits = ['spade', 'diamond', 'heart', 'club']
 		for rank in ranks:
 			for suit in suits: 
 				deck.append(Card(rank, suit))
