@@ -12,7 +12,15 @@ class Card:
 		self.suit = suit
 	
 	def __str__(self): 
-		return self.rank + self.suit[0]
+		suit_str = ''
+		# CRED = '\033[91m'
+		# CEND = '\033[0m'
+		if self.suit == 'diamond' or self.suit == 'heart':
+			# return CRED + self.rank + self.suit[0].upper() + CEND
+			return self.rank + self.suit[0].upper()
+		else:
+			return self.rank + self.suit[0].upper()
+
 	def is_opposite_suit(self, card):
 		if self.suit == 'club' or self.suit == 'spade':
 			return card.suit == 'heart' or card.suit == 'diamond'
@@ -40,10 +48,10 @@ class Deck:
 		self.deck = deck
 
 	def get_deck(self):
-		return self.deck
+		return list(self.deck)
 
 	def flip_card(self):
 		return self.deck.pop()
 
 	def deal_cards(self, num_cards):
-		return list(self.deck[:num_cards])
+		return self.deck[:num_cards]

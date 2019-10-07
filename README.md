@@ -1,22 +1,20 @@
-How You Will Be Assessed
+# Play Solitaire In Your Console
 
-You will be assessed on your creativity and the quality of your code and design document. This includes, but is not limited to, the following:
+## How to Run 
+- Run `python solitaire/`in the terminal once you navigate to the correct folder
+- The following commands are valid for use 
+	- sw - move card from stock to waste
+	- wf - move card from waste to foundation
+	- wt - move card from waste to tableau
+	- tf <num tableau> - move card from tableau to foundation
+	- tt <num tableau 1> <num tableau 2> - move card from one tableau to another
+	- q - quit the game
 
-Does the game work, i.e. is it possible to play a complete game of the card game you chose?
-How thoughtful were your system design decisions?
-Is the game designed well / easily playable?
-Is the code organized, modular, and well-factored?
-What edge cases were considered and accounted for?
-Design Document should include: 
+## External Libraries
+- `curses` to handle terminal output
 
-Instructions for running your code and any tests you may have written
-Rules for your card game, if not one of the three listed above
-A brief explanation of your design choices and any data structures or algorithms that you implemented
-Choice of tooling (language, libraries, test runner, etc.) and rationale behind those choices.
-Other Notes:
+## Design Decisions
+### System design 
+#### Classes 
 
-The card game can be single or multiplayer
-Many card games rely on the cards of a player being hidden from other players. You may want to consider implementing such a feature.
-Feel free to use any programming language.
-Please cite any external libraries that you use.
-We suggest you spend no more than 3 hours on this challenge.
+### Edge cases 

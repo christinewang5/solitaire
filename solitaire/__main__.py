@@ -1,3 +1,4 @@
+import sys
 import curses
 
 from curses import wrapper
@@ -12,20 +13,10 @@ from solitaire import *
 # 		+ 'tt <num tableau 1> <num tableau 2> - move card from one tableau to another\n'\
 # 		+ 'q - quit\n'
 
-required_height = 60
-def perform_command(c, game):
-	if c == "sw":
-		game.stock_to_waste()
-	elif c == "wf": 
-		game.waste_to_foundation()
-	
-
 def main(screen):
 	game = Solitaire()
-	while True:		
-		screen.clear()
-		screen_height, screen_width = screen.getmaxyx()
 
+	while not game.foundation.is_finished():
 		welcome_str = '#######################  SOLITAIRE. ######################\n'
 			
 		command_str = "\nEnter a command (type 'h' for help): "
@@ -34,13 +25,22 @@ def main(screen):
 		screen.addstr(0, 0, output_str)
 		
 		curses.echo() 
+		screen.refresh()
 		num_lines = output_str.count('\n')
-		c = screen.getstr(num_lines, 37, 15)
-		c = c.lower().replace(" ", "")
+		c = screen.getstr(num_lines, 37, 5).lower().replace(" ", "")
+
 		if c == 'q':
 			return
-		else:
-			perform_command(c, game)
+		elif c == 'sw':
+			game.stock_to_waste()
+		elif c == 'wf':
+			game.waste_to_foundation()
+		
+		screen.refresh()
+		curses.endwin()
+
+		# elif c == 'wt':
+		# 	game.waste_to_tableau()
 
 if __name__ == "__main__":
 	wrapper(main)
