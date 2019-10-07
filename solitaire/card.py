@@ -1,5 +1,5 @@
 import random
-# from termcolor import colored
+import curses
 
 suits = ['spade', 'diamond', 'heart', 'club']
 ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
@@ -10,14 +10,14 @@ class Card:
 		self.suit = suit
 	
 	def __str__(self): 
-		suit_str = ''
-		# CRED = '\033[91m'
-		# CEND = '\033[0m'
-		if self.suit == 'diamond' or self.suit == 'heart':
-			# return CRED + self.rank + self.suit[0].upper() + CEND
-			return self.rank + self.suit[0].upper()
+		return self.rank + self.suit[0].upper()
+	def display(self, screen):
+		curses.init_pair(1, curses.COLOR_RED, curses.COLOR_WHITE)
+		curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_WHITE)
+		if self.suit == 'spade' or self.suit== 'club':
+			screen.addstr(str(self), curses.color_pair(2))
 		else:
-			return self.rank + self.suit[0].upper()
+			screen.addstr(str(self), curses.color_pair(1))
 
 	def is_opposite_suit(self, card):
 		if self.suit == 'club' or self.suit == 'spade':

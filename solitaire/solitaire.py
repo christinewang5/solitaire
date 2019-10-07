@@ -1,5 +1,6 @@
 from card import *
 import random
+import curses
 
 class Solitaire():
 	def __init__(self):
@@ -19,7 +20,17 @@ class Solitaire():
 			self.foundation.get_top_card("club"), self.foundation.get_top_card("heart"), 
 			self.foundation.get_top_card("spade"), self.foundation.get_top_card("diamond"))
 		return header + first_row + str(self.tableau)
-	
+
+	def display(self, screen):
+		header = "\n# in Stock \tWaste  \t\t Foundation C   H   S   D\n" 
+		first_row = "{:10}  \t{:10} \t\t    {:3} {:3} {:3} {:3}\n".format(
+			self.stock_waste.get_num_stock(), self.stock_waste.get_waste_card(), 
+			self.foundation.get_top_card("club"), self.foundation.get_top_card("heart"), 
+			self.foundation.get_top_card("spade"), self.foundation.get_top_card("diamond"))
+		screen.addstr(header + first_row)
+		self.tableau.display(screen)
+		return 
+		
 	def get_instructions(self):
 		""" 
 		Provides list of commands
@@ -103,25 +114,22 @@ class Tableau:
 			cur_idx += x + 1
 		self.flipped = {x: [self.unflipped[x].pop()] for x in range(num_col)}
 
-	def __str__(self):
-		tableau_hdr = "\nTableau\n\t1 \t2 \t3 \t4 \t5 \t6 \t7 \n"
-		tableau_str = ""
+	def display(self, screen):
+		screen.addstr("\nTableau\n\t1 \t2 \t3 \t4 \t5 \t6 \t7 \n")
 		num_cols = 7
 		for x in range(self.max_tableau_length()):
-			tableau_col_str = ""
 			for col in range(num_cols):
 				hidden = self.unflipped[col]
 				shown = self.flipped[col]
 				hidden_len = len(hidden)
 				shown_len = len(shown)
+				screen.addstr("\t")
 				if hidden_len > x:
-					tableau_col_str += "\tx"
+					screen.addstr("x")
 				elif shown_len + hidden_len > x:
-					tableau_col_str += "\t" + str(shown[x - hidden_len])
-				else:
-					tableau_col_str += "\t"
-			tableau_str += tableau_col_str + '\n'
-		return tableau_hdr + tableau_str
+					shown[x-hidden_len].display(screen)
+			screen.addstr("\n")
+		return
 	
 	def max_tableau_length(self):
 		""" Returns the length of the longest pile on the Tableau """
