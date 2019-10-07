@@ -54,4 +54,6 @@ class Deck:
 		return self.deck.pop()
 
 	def deal_cards(self, num_cards):
-		return self.deck[:num_cards]
+		cards = self.deck[:num_cards]
+		self.deck = self.deck[num_cards:]
+		return cards
