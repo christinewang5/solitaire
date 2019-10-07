@@ -104,12 +104,14 @@ class Tableau:
 		Returns true if cards were successfully added to column on the Tableau. 
 		Returns false otherwise. 
 		"""
-		column_cards = self.flipped[column]
+		column_cards = self.flipped[column - 1]
+		top_card = cards[0]
 		# Empty tableau column
-		if len(column_cards) == 0 and cards[0].value == 13:
+		if len(column_cards) == 0 and top_card.rank == 'K':
 			column_cards.extend(cards)
 			return True
-		elif len(column_cards) > 0 and column_cards[-1].can_place_card(cards[0]):
+		# Non-empty tableau column
+		elif len(column_cards) > 0 and column_cards[-1].can_place_card(top_card):
 			column_cards.extend(cards)
 			return True
 		else:

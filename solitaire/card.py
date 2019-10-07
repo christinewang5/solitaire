@@ -5,8 +5,6 @@ suits = ['spade', 'diamond', 'heart', 'club']
 ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 
 class Card:
-	rank_value_map = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, 
-					  '8': 8, '9': 9 , '10': 10, 'J': 11, 'Q': 12, 'K': 13}
 	def __init__(self, rank, suit):
 		self.rank = rank
 		self.suit = suit
@@ -28,6 +26,8 @@ class Card:
 			return card.suit == 'spade' or card.suit == 'club'
 	
 	def is_smaller(self, card):
+		rank_value_map = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, 
+					  '8': 8, '9': 9 , '10': 10, 'J': 11, 'Q': 12, 'K': 13}
 		self_value = rank_value_map[self.rank]
 		card_value = rank_value_map[card.rank]
 		return self_value == card_value - 1

@@ -26,7 +26,7 @@ def main(screen):
 		
 		curses.echo() 
 		screen.refresh()
-		num_lines = output_str.count('\n')
+		num_lines, _ = screen.getyx()
 		c = screen.getstr(num_lines, 37, 5).lower().replace(" ", "")
 
 		if c == 'q':
@@ -35,12 +35,16 @@ def main(screen):
 			game.stock_to_waste()
 		elif c == 'wf':
 			game.waste_to_foundation()
-		
+		elif c.startswith('wt'):
+			try: 
+				col = int(c[-1])
+				game.waste_to_tableau(col)
+				continue
+			except ValueError:
+				continue
+		y, x = screen.getyx()
+		screen.addstr(y, x, '')
 		screen.refresh()
-		curses.endwin()
-
-		# elif c == 'wt':
-		# 	game.waste_to_tableau()
 
 if __name__ == "__main__":
 	wrapper(main)
