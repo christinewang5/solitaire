@@ -27,7 +27,7 @@ class Solitaire():
 		instructions_str = 'Commands: \n' \
 		+ 'sw - move card from stock to waste\n'\
 		+ 'wf - move card from waste to foundation\n'\
-		+ 'wt - move card from waste to tableau\n'\
+		+ 'wt <num tableau> - move card from waste to tableau\n'\
 		+ 'tf <num tableau> - move card from tableau to foundation\n'\
 		+ 'tt <num tableau 1> <num tableau 2> - move card from one tableau to another\n'\
 		+ 'q - quit\n'
@@ -62,6 +62,21 @@ class Solitaire():
 			return True
 		else:
 			return False
+	
+	def tableau_to_foundation(self, column):
+		""" 
+		Moves a card from the Tableau to the correct Foundation pile
+		"""
+		column_cards = self.tableau.flipped[column]
+		if len(column_cards) == 0:
+			return False
+		if self.foundation.add_card(column_cards[-1]):
+			column_cards.pop()
+			if len(column_cards) == 0:
+				self.tableau.flip_card(column)
+			return True
+		else:
+			return False
 
 	def tableau_to_tableau(self, c1, c2):
 		"""
@@ -81,15 +96,18 @@ class Tableau:
 	def __str__(self):
 		tableau_hdr = "\nTableau\n\t1 \t2 \t3 \t4 \t5 \t6 \t7 \n"
 		tableau_str = ""
+		num_cols = 7
 		for x in range(self.max_tableau_length()):
 			tableau_col_str = ""
-			for col in range(7):
+			for col in range(num_cols):
 				hidden = self.unflipped[col]
 				shown = self.flipped[col]
-				if len(hidden) > x:
+				hidden_len = len(hidden)
+				shown_len = len(shown)
+				if hidden_len > x:
 					tableau_col_str += "\tx"
-				elif len(shown) + len(hidden) > x:
-					tableau_col_str += "\t" + str(shown[x-len(hidden)])
+				elif shown_len + hidden_len > x:
+					tableau_col_str += "\t" + str(shown[x - hidden_len])
 				else:
 					tableau_col_str += "\t"
 			tableau_str += tableau_col_str + '\n'
@@ -104,7 +122,7 @@ class Tableau:
 		Returns true if cards were successfully added to column on the Tableau. 
 		Returns false otherwise. 
 		"""
-		column_cards = self.flipped[column - 1]
+		column_cards = self.flipped[column]
 		top_card = cards[0]
 		# Empty tableau column
 		if len(column_cards) == 0 and top_card.rank == 'K':
@@ -116,21 +134,10 @@ class Tableau:
 			return True
 		else:
 			return False
-
-	def tableau_to_foundation(self, foundation, column):
-		""" 
-		Moves a card from the Tableau to the correct Foundation pile
-		"""
-		column_cards = self.flipped[column]
-		if len(column_cards) == 0:
-			return False
-		if foundation.add_card(column_cards[-1]):
-			column_cards.pop()
-			if len(column_cards) == 0:
-				self.flip_card(column)
-			return True
-		else:
-			return False
+	
+	def flip_card(self, col):
+		if len(self.unflipped[col]) > 0:
+			return self.flipped[col].append(self.unflipped[col].pop())
 
 class Foundation:
 	def __init__(self):
