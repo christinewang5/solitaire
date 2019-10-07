@@ -8,14 +8,14 @@ from solitaire import *
 def main(screen):
 	game = Solitaire()
 
-	while not game.foundation.is_finished():
+	while not game.is_finished():
 		screen.clear()
 		welcome_str = '#######################  SOLITAIRE. ######################\n'	
 		screen.addstr(0, 0,  welcome_str + game.get_instructions() )
 		game.display(screen)
 		command_str = "\nEnter a command (type 'h' for help): "
 		screen.addstr(command_str)
-		
+
 		# Prepare for user input
 		curses.echo() 
 		c = screen.getstr(5).lower().replace(" ", "")
@@ -48,6 +48,7 @@ def main(screen):
 				continue
 			except ValueError:
 				continue
+	
 		
 if __name__ == "__main__":
 	wrapper(main)

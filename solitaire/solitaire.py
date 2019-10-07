@@ -4,10 +4,10 @@ import curses
 
 class Solitaire():
 	def __init__(self):
-		self.deck = Deck()
-		self.tableau = Tableau(self.deck.deal_cards(28))
+		deck = Deck()
+		self.tableau = Tableau(deck.deal_cards(28))
 		self.foundation = Foundation()
-		self.stock_waste = StockWaste(self.deck.deal_cards(24))
+		self.stock_waste = StockWaste(deck.deal_cards(24))
 		self.win = False
 
 	def __str__(self):
@@ -93,7 +93,7 @@ class Solitaire():
 		"""
 		Returns True if any card(s) are successfully moved from c1 to c2 on
 		the Tableau
-		Returns False otherwise. 
+		Returns False otherwise.
 		"""
 		c1_cards = self.tableau.flipped[c1]
 		for index in range(len(c1_cards)):
@@ -103,6 +103,12 @@ class Solitaire():
 					self.tableau.flip_card(c1)
 				return True
 		return False
+
+	def is_finished(self):
+		for suit, stack in self.foundation.suits.items():
+			if len(stack) != 13: 
+				return False
+		return True
 	
 class Tableau:
 	def __init__(self, cards): 
@@ -168,12 +174,6 @@ class Foundation:
 			return '?'
 		else:
 			return self.suits[suit][-1]
-
-	def is_finished(self):
-		for suit, stack in self.suits.items():
-			if len(stack) != 13: 
-				return False
-		return True
 
 	def add_card(self, card):
 		""" Returns True if a card is successfully added to the Foundation,
