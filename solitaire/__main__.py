@@ -50,9 +50,15 @@ def main(screen):
 				continue
 			except ValueError:
 				continue
+		elif c.startswith('tt'):
+			try: 
+				col1 = int(c[-2]) - 1
+				col2 = int(c[-1]) - 1
+				game.tableau_to_tableau(col1, col2)
+				continue
+			except ValueError:
+				continue
 		
-		
-		
-
 if __name__ == "__main__":
 	wrapper(main)
+	print("\033[96m{}\033[00m" .format('Quitting Solitaire...')) 

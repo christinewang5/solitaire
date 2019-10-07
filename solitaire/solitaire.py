@@ -77,20 +77,30 @@ class Solitaire():
 			return True
 		else:
 			return False
-
+			
 	def tableau_to_tableau(self, c1, c2):
 		"""
 		Returns True if any card(s) are successfully moved from c1 to c2 on
 		the Tableau
 		Returns False otherwise. 
 		"""
-		c1_cards = self.flipped[c1]
-		return self.add_cards_to_col(c1_cards, c2)
+		c1_cards = self.tableau.flipped[c1]
+		for index in range(len(c1_cards)):
+			if self.tableau.add_cards_to_col(c1_cards[index:], c2):
+				self.tableau.flipped[c1] = c1_cards[0:index]
+				if index == 0:
+					self.tableau.flip_card(c1)
+				return True
+		return False
 	
 class Tableau:
 	def __init__(self, cards): 
 		num_col = 7
-		self.unflipped = {x: cards[:x + 1] for x in range(num_col)}
+		self.unflipped = {}
+		cur_idx = 0
+		for x in range(num_col):
+			self.unflipped[x] = cards[cur_idx:cur_idx + x + 1]
+			cur_idx += x + 1
 		self.flipped = {x: [self.unflipped[x].pop()] for x in range(num_col)}
 
 	def __str__(self):
@@ -152,7 +162,6 @@ class Foundation:
 			return self.suits[suit][-1]
 
 	def is_finished(self):
-		""" Returns whetsher the user has won the game. """
 		for suit, stack in self.suits.items():
 			if len(stack) != 13: 
 				return False
@@ -181,19 +190,16 @@ class StockWaste:
 		self.waste = []
 
 	def pop_waste_card(self):
-		""" Removes a card from the Waste pile. """
 		if len(self.waste) > 0:
 			return self.waste.pop()
 
 	def get_waste_card(self):
-		""" Retrieves the top card of the Waste pile. """
 		if len(self.waste) > 0:
 			return self.waste[-1]
 		else:
 			return "empty"
 
 	def get_num_stock(self):
-		""" Returns a string of the number of cards in the stock. """
 		if len(self.stock) > 0:
 			return str(len(self.stock)) + " card(s)"
 		else:
